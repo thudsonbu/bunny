@@ -1,0 +1,32 @@
+{
+  "name": "bunny",
+  "version": "1.0.0",
+  "description": "Rabbit MQ Testing",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_DEBUG=info node lib/index.js",
+    "compile": "tsc -p .",
+    "publish": "ts-node ./src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thudsonbu/bunny.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thudsonbu/bunny/issues"
+  },
+  "homepage": "https://github.com/thudsonbu/bunny#readme",
+  "dependencies": {
+    "amqplib": "^0.10.3",
+    "pino": "^8.7.0",
+    "typescript": "^4.9.3"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.10.0",
+    "@types/pino": "^7.0.5",
+    "ts-node": "^10.9.1"
+  }
+}
