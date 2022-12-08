@@ -22,3 +22,10 @@ nvm use
 
 npm i
 ```
+## Run
+
+You can run the demo with:
+
+```bash
+npm run start
+```
