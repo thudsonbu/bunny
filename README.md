@@ -1,12 +1,14 @@
 # bunny
 
-Rabbit MQ Testing
+A quick example of RabbitMQ and AMQP. The `publisher` adds `Job`s to the `jobs`
+queue which are then acknowledged by the `consumer`.
 
 # Development
 
 ## Setup
 
-You will need a rabbit mq instance running locally. Start a rabbit mq docker container with the following command:
+You will need a rabbit mq instance running locally. Start a rabbit mq docker
+container with the following command:
 
 ```bash
 docker run --name rabbitmq -p 5672:5672 rabbitmq

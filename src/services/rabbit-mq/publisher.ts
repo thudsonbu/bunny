@@ -1,47 +1,35 @@
 import amqp from "amqplib";
 import Job from "../../models/job";
 import log from "../../adapters/log";
+import { connect as create_connection } from "./connect";
 
 let connection: amqp.Connection;
 let channel: amqp.Channel;
 
+/**
+ * Connects the publisher to RabbitMQ.
+ */
 export async function connect() {
   try {
-    // RabbitMQ uses advanced message queuing protocol (AMQP) to communicate
-    // with the client. It is built on top of TCP.
-    connection = await amqp.connect("amqp://localhost:5672");
+    const rbConn = await create_connection();
 
-    // A channel is a virtual connection inside a connection. It is used to
-    // send and receive messages.
-    channel = await connection.createChannel();
-
-    log.info("RabbitMQ publisher connection established.");
+    connection = rbConn.connection;
+    channel = rbConn.channel;
   } catch (err) {
-    log.error(err);
+    log.error(err, "Publisher connection to RabbitMQ failed.");
   }
 }
 
-export async function close() {
-  try {
-    if (!connection) {
-      throw new Error("Connection does not exist.");
-    }
-
-    await connection.close();
-  } catch (err) {
-    log.error(err);
-  }
-}
-
-export async function sendJob(job: Job) {
+/**
+ * Publishes a job to the 'jobs' queue.
+ */
+export async function publishJob(job: Job) {
   if (!connection) {
-    throw new Error("Connection must be established before sending a job.");
+    throw new Error("RabbitMQ connection not yet established.");
   }
 
   if (!channel) {
-    throw new Error(
-      "Channel must be created before adding a job to to the queue."
-    );
+    throw new Error("RabbitMQ channel not yet established.");
   }
 
   // A queue is a buffer that stores messages. It is created if it does not
@@ -53,8 +41,23 @@ export async function sendJob(job: Job) {
   log.info("Send job successfully!");
 }
 
+/**
+ * Disconnects the publisher from RabbitMQ.
+ */
+export async function disconnect() {
+  if (!connection) {
+    throw new Error("RabbitMQ connection not yet established.");
+  }
+
+  try {
+    await connection.close();
+  } catch (err) {
+    log.error(err, "Publisher disconnection from RabbitMQ failed.");
+  }
+}
+
 export default {
   connect,
-  close,
-  sendJob,
+  publishJob,
+  disconnect,
 };
